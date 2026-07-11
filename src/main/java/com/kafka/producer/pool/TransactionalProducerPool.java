@@ -340,7 +340,7 @@ public final class TransactionalProducerPool {
                     lease.getProducer().flush();
                     lease.getProducer().commitTransaction();
                     metrics.recordTransactionCommit();
-                    metrics.recordTransactionDuration(System.nanoTime() - txStart);
+                    // duration recorded once in finally
 
                     log.info("Transaction committed leaseId={} transactionalId={} attempt={}",
                             lease.getLeaseId(), lease.getTransactionalId(), attempt);
