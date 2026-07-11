@@ -1,0 +1,4 @@
+com/kafka/producer/pool/ErrorClassifierTest.class
+com/kafka/producer/pool/PoolConfigTest.class
+com/kafka/producer/pool/RecoverySupervisorTest.class
+com/kafka/producer/pool/TransactionalProducerPoolTest.class

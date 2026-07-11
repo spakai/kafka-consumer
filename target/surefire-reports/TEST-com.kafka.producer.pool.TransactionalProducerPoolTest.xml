@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.kafka.producer.pool.TransactionalProducerPoolTest" time="2.288" tests="14" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="17"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/home/runner/work/kafka-consumer/kafka-consumer/target/test-classes:/home/runner/work/kafka-consumer/kafka-consumer/target/classes:/home/runner/.m2/repository/org/apache/kafka/kafka-clients/3.6.1/kafka-clients-3.6.1.jar:/home/runner/.m2/repository/com/github/luben/zstd-jni/1.5.5-1/zstd-jni-1.5.5-1.jar:/home/runner/.m2/repository/org/lz4/lz4-java/1.8.0/lz4-java-1.8.0.jar:/home/runner/.m2/repository/org/xerial/snappy/snappy-java/1.1.10.5/snappy-java-1.1.10.5.jar:/home/runner/.m2/repository/io/micrometer/micrometer-core/1.12.0/micrometer-core-1.12.0.jar:/home/runner/.m2/repository/io/micrometer/micrometer-commons/1.12.0/micrometer-commons-1.12.0.jar:/home/runner/.m2/repository/io/micrometer/micrometer-observation/1.12.0/micrometer-observation-1.12.0.jar:/home/runner/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/runner/.m2/repository/org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar:/home/runner/.m2/repository/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.1/junit-jupiter-5.10.1.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.1/junit-jupiter-api-5.10.1.jar:/home/runner/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-commons/1.10.1/junit-platform-commons-1.10.1.jar:/home/runner/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.1/junit-jupiter-params-5.10.1.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.1/junit-jupiter-engine-5.10.1.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-engine/1.10.1/junit-platform-engine-1.10.1.jar:/home/runner/.m2/repository/org/mockito/mockito-junit-jupiter/5.7.0/mockito-junit-jupiter-5.7.0.jar:/home/runner/.m2/repository/org/mockito/mockito-core/5.7.0/mockito-core-5.7.0.jar:/home/runner/.m2/repository/net/bytebuddy/byte-buddy/1.14.9/byte-buddy-1.14.9.jar:/home/runner/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar:/home/runner/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/runner/.m2/repository/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar:/home/runner/.m2/repository/ch/qos/logback/logback-core/1.4.14/logback-core-1.4.14.jar:/home/runner/.m2/repository/org/awaitility/awaitility/4.2.0/awaitility-4.2.0.jar:/home/runner/.m2/repository/org/hamcrest/hamcrest/2.1/hamcrest-2.1.jar:"/>
+    <property name="java.vm.vendor" value="Eclipse Adoptium"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://adoptium.net/"/>
+    <property name="user.timezone" value="Etc/UTC"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="17"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/temurin-17-jdk-amd64/lib"/>
+    <property name="sun.java.command" value="/home/runner/work/kafka-consumer/kafka-consumer/target/surefire/surefirebooter-20260711041729163_3.jar /home/runner/work/kafka-consumer/kafka-consumer/target/surefire 2026-07-11T04-17-28_799-jvmRun1 surefire-20260711041729163_1tmp surefire_0-20260711041729163_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/home/runner/work/kafka-consumer/kafka-consumer/target/test-classes:/home/runner/work/kafka-consumer/kafka-consumer/target/classes:/home/runner/.m2/repository/org/apache/kafka/kafka-clients/3.6.1/kafka-clients-3.6.1.jar:/home/runner/.m2/repository/com/github/luben/zstd-jni/1.5.5-1/zstd-jni-1.5.5-1.jar:/home/runner/.m2/repository/org/lz4/lz4-java/1.8.0/lz4-java-1.8.0.jar:/home/runner/.m2/repository/org/xerial/snappy/snappy-java/1.1.10.5/snappy-java-1.1.10.5.jar:/home/runner/.m2/repository/io/micrometer/micrometer-core/1.12.0/micrometer-core-1.12.0.jar:/home/runner/.m2/repository/io/micrometer/micrometer-commons/1.12.0/micrometer-commons-1.12.0.jar:/home/runner/.m2/repository/io/micrometer/micrometer-observation/1.12.0/micrometer-observation-1.12.0.jar:/home/runner/.m2/repository/org/hdrhistogram/HdrHistogram/2.1.12/HdrHistogram-2.1.12.jar:/home/runner/.m2/repository/org/latencyutils/LatencyUtils/2.0.3/LatencyUtils-2.0.3.jar:/home/runner/.m2/repository/org/slf4j/slf4j-api/2.0.9/slf4j-api-2.0.9.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.1/junit-jupiter-5.10.1.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.1/junit-jupiter-api-5.10.1.jar:/home/runner/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-commons/1.10.1/junit-platform-commons-1.10.1.jar:/home/runner/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.1/junit-jupiter-params-5.10.1.jar:/home/runner/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.1/junit-jupiter-engine-5.10.1.jar:/home/runner/.m2/repository/org/junit/platform/junit-platform-engine/1.10.1/junit-platform-engine-1.10.1.jar:/home/runner/.m2/repository/org/mockito/mockito-junit-jupiter/5.7.0/mockito-junit-jupiter-5.7.0.jar:/home/runner/.m2/repository/org/mockito/mockito-core/5.7.0/mockito-core-5.7.0.jar:/home/runner/.m2/repository/net/bytebuddy/byte-buddy/1.14.9/byte-buddy-1.14.9.jar:/home/runner/.m2/repository/net/bytebuddy/byte-buddy-agent/1.14.9/byte-buddy-agent-1.14.9.jar:/home/runner/.m2/repository/org/objenesis/objenesis/3.3/objenesis-3.3.jar:/home/runner/.m2/repository/ch/qos/logback/logback-classic/1.4.14/logback-classic-1.4.14.jar:/home/runner/.m2/repository/ch/qos/logback/logback-core/1.4.14/logback-core-1.4.14.jar:/home/runner/.m2/repository/org/awaitility/awaitility/4.2.0/awaitility-4.2.0.jar:/home/runner/.m2/repository/org/hamcrest/hamcrest/2.1/hamcrest-2.1.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/runner"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2026-04-21"/>
+    <property name="java.home" value="/usr/lib/jvm/temurin-17-jdk-amd64"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/home/runner/work/kafka-consumer/kafka-consumer"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="surefire.real.class.path" value="/home/runner/work/kafka-consumer/kafka-consumer/target/surefire/surefirebooter-20260711041729163_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="17.0.19+10"/>
+    <property name="user.name" value="runner"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.17.0-1018-azure"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Temurin-17.0.19+10"/>
+    <property name="localRepository" value="/home/runner/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="17.0.19"/>
+    <property name="user.dir" value="/home/runner/work/kafka-consumer/kafka-consumer"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Eclipse Adoptium"/>
+    <property name="java.vm.version" value="17.0.19+10"/>
+    <property name="java.specification.maintenance.version" value="1"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="61.0"/>
+  </properties>
+  <testcase name="leaseRejectedWhenPoolDraining" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="1.31">
+    <system-out><![CDATA[04:17:31.120 [main] DEBUG io.micrometer.common.util.internal.logging.InternalLoggerFactory -- Using SLF4J as the default logging framework
+04:17:31.148 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.155 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.221 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.222 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.222 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.222 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.224 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.225 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.226 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.226 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+04:17:31.231 [main] WARN com.kafka.producer.pool.TransactionalProducerPool -- shutdown() called in unexpected pool state STOPPED
+04:17:31.232 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.232 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.232 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.233 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="poolInitializesAndBecomesHealthy" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.008">
+    <system-out><![CDATA[04:17:31.266 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.266 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.267 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.267 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.267 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.267 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.269 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.269 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.269 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.270 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="acquireLeaseAndRelease" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.007">
+    <system-out><![CDATA[04:17:31.274 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.274 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.275 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.275 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.275 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.275 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.276 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:31.277 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=262bf5a5-f8cc-44c6-89e9-230232f74541 transactionalId=test-svc-inst-0-0 waited=0ms
+04:17:31.277 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:31.277 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:31.278 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.278 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.278 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.278 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="retriableErrorIsRetriedThenSucceeds" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.034">
+    <system-out><![CDATA[04:17:31.283 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.283 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.283 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.284 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.284 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.284 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.290 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:31.290 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=2df11854-9c06-4b81-b0e2-ae35414cbeb8 transactionalId=test-svc-inst-0-0 waited=0ms
+04:17:31.290 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- executeInTransaction leaseId=2df11854-9c06-4b81-b0e2-ae35414cbeb8 transactionalId=test-svc-inst-0-0 correlationId=null
+04:17:31.290 [main] DEBUG com.kafka.producer.pool.PooledProducer -- beginTransaction transactionalId=test-svc-inst-0-0
+04:17:31.291 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction begun leaseId=2df11854-9c06-4b81-b0e2-ae35414cbeb8 transactionalId=test-svc-inst-0-0
+04:17:31.291 [main] DEBUG com.kafka.producer.pool.PooledProducer -- flush transactionalId=test-svc-inst-0-0
+04:17:31.293 [main] WARN com.kafka.producer.pool.TransactionalProducerPool -- Transaction error attempt=1/3 leaseId=2df11854-9c06-4b81-b0e2-ae35414cbeb8 transactionalId=test-svc-inst-0-0 errorClass=RETRIABLE error=transient
+04:17:31.294 [main] DEBUG com.kafka.producer.pool.PooledProducer -- abortTransaction transactionalId=test-svc-inst-0-0
+04:17:31.294 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction aborted leaseId=2df11854-9c06-4b81-b0e2-ae35414cbeb8
+04:17:31.295 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Retry backoff attempt=1 delayMs=11
+04:17:31.306 [main] DEBUG com.kafka.producer.pool.PooledProducer -- beginTransaction transactionalId=test-svc-inst-0-0
+04:17:31.306 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction begun leaseId=2df11854-9c06-4b81-b0e2-ae35414cbeb8 transactionalId=test-svc-inst-0-0
+04:17:31.306 [main] DEBUG com.kafka.producer.pool.PooledProducer -- flush transactionalId=test-svc-inst-0-0
+04:17:31.307 [main] DEBUG com.kafka.producer.pool.PooledProducer -- commitTransaction transactionalId=test-svc-inst-0-0
+04:17:31.307 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Transaction committed leaseId=2df11854-9c06-4b81-b0e2-ae35414cbeb8 transactionalId=test-svc-inst-0-0 attempt=1
+04:17:31.307 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:31.307 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:31.312 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.313 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.313 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.313 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="shutdownTransitionsPoolToStopped" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.006">
+    <system-out><![CDATA[04:17:31.317 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.317 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.318 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.318 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.318 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.318 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.318 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.318 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.319 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.319 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+04:17:31.319 [main] WARN com.kafka.producer.pool.TransactionalProducerPool -- shutdown() called in unexpected pool state STOPPED
+04:17:31.319 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.320 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.320 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.320 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="executeInTransactionSuccessPath" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.01">
+    <system-out><![CDATA[04:17:31.324 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.324 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.324 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.324 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.325 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.325 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.325 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:31.325 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=9c1b7a8e-f874-433e-aeb1-9a459b653968 transactionalId=test-svc-inst-0-0 waited=0ms
+04:17:31.326 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- executeInTransaction leaseId=9c1b7a8e-f874-433e-aeb1-9a459b653968 transactionalId=test-svc-inst-0-0 correlationId=null
+04:17:31.326 [main] DEBUG com.kafka.producer.pool.PooledProducer -- beginTransaction transactionalId=test-svc-inst-0-0
+04:17:31.326 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction begun leaseId=9c1b7a8e-f874-433e-aeb1-9a459b653968 transactionalId=test-svc-inst-0-0
+04:17:31.326 [main] DEBUG com.kafka.producer.pool.PooledProducer -- flush transactionalId=test-svc-inst-0-0
+04:17:31.326 [main] DEBUG com.kafka.producer.pool.PooledProducer -- commitTransaction transactionalId=test-svc-inst-0-0
+04:17:31.327 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Transaction committed leaseId=9c1b7a8e-f874-433e-aeb1-9a459b653968 transactionalId=test-svc-inst-0-0 attempt=0
+04:17:31.327 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:31.327 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:31.331 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.331 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.331 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.331 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="retriableErrorExhaustsRetriesAndThrows" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.037">
+    <system-out><![CDATA[04:17:31.335 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.335 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.335 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.335 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.336 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.336 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.337 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:31.337 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=9c98a2bc-4949-4197-be08-7273b953c77c transactionalId=test-svc-inst-0-0 waited=0ms
+04:17:31.337 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- executeInTransaction leaseId=9c98a2bc-4949-4197-be08-7273b953c77c transactionalId=test-svc-inst-0-0 correlationId=null
+04:17:31.337 [main] DEBUG com.kafka.producer.pool.PooledProducer -- beginTransaction transactionalId=test-svc-inst-0-0
+04:17:31.337 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction begun leaseId=9c98a2bc-4949-4197-be08-7273b953c77c transactionalId=test-svc-inst-0-0
+04:17:31.337 [main] DEBUG com.kafka.producer.pool.PooledProducer -- flush transactionalId=test-svc-inst-0-0
+04:17:31.338 [main] WARN com.kafka.producer.pool.TransactionalProducerPool -- Transaction error attempt=1/3 leaseId=9c98a2bc-4949-4197-be08-7273b953c77c transactionalId=test-svc-inst-0-0 errorClass=RETRIABLE error=always fails
+04:17:31.338 [main] DEBUG com.kafka.producer.pool.PooledProducer -- abortTransaction transactionalId=test-svc-inst-0-0
+04:17:31.338 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction aborted leaseId=9c98a2bc-4949-4197-be08-7273b953c77c
+04:17:31.338 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Retry backoff attempt=1 delayMs=10
+04:17:31.348 [main] DEBUG com.kafka.producer.pool.PooledProducer -- beginTransaction transactionalId=test-svc-inst-0-0
+04:17:31.349 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction begun leaseId=9c98a2bc-4949-4197-be08-7273b953c77c transactionalId=test-svc-inst-0-0
+04:17:31.349 [main] DEBUG com.kafka.producer.pool.PooledProducer -- flush transactionalId=test-svc-inst-0-0
+04:17:31.349 [main] WARN com.kafka.producer.pool.TransactionalProducerPool -- Transaction error attempt=2/3 leaseId=9c98a2bc-4949-4197-be08-7273b953c77c transactionalId=test-svc-inst-0-0 errorClass=RETRIABLE error=always fails
+04:17:31.349 [main] DEBUG com.kafka.producer.pool.PooledProducer -- abortTransaction transactionalId=test-svc-inst-0-0
+04:17:31.349 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction aborted leaseId=9c98a2bc-4949-4197-be08-7273b953c77c
+04:17:31.349 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Retry backoff attempt=2 delayMs=17
+04:17:31.367 [main] DEBUG com.kafka.producer.pool.PooledProducer -- beginTransaction transactionalId=test-svc-inst-0-0
+04:17:31.367 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction begun leaseId=9c98a2bc-4949-4197-be08-7273b953c77c transactionalId=test-svc-inst-0-0
+04:17:31.367 [main] DEBUG com.kafka.producer.pool.PooledProducer -- flush transactionalId=test-svc-inst-0-0
+04:17:31.367 [main] WARN com.kafka.producer.pool.TransactionalProducerPool -- Transaction error attempt=3/3 leaseId=9c98a2bc-4949-4197-be08-7273b953c77c transactionalId=test-svc-inst-0-0 errorClass=RETRIABLE error=always fails
+04:17:31.367 [main] DEBUG com.kafka.producer.pool.PooledProducer -- abortTransaction transactionalId=test-svc-inst-0-0
+04:17:31.368 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction aborted leaseId=9c98a2bc-4949-4197-be08-7273b953c77c
+04:17:31.368 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:31.368 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:31.369 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.369 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.369 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.369 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="executeInTransactionSendsRecord" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.009">
+    <system-out><![CDATA[04:17:31.374 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.374 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.374 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.374 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.375 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.375 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.376 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:31.376 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=84543b68-5d51-4e11-8d84-f52f90520626 transactionalId=test-svc-inst-0-0 waited=0ms
+04:17:31.376 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- executeInTransaction leaseId=84543b68-5d51-4e11-8d84-f52f90520626 transactionalId=test-svc-inst-0-0 correlationId=null
+04:17:31.376 [main] DEBUG com.kafka.producer.pool.PooledProducer -- beginTransaction transactionalId=test-svc-inst-0-0
+04:17:31.377 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction begun leaseId=84543b68-5d51-4e11-8d84-f52f90520626 transactionalId=test-svc-inst-0-0
+04:17:31.377 [main] DEBUG com.kafka.producer.pool.PooledProducer -- flush transactionalId=test-svc-inst-0-0
+04:17:31.377 [main] DEBUG com.kafka.producer.pool.PooledProducer -- commitTransaction transactionalId=test-svc-inst-0-0
+04:17:31.377 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Transaction committed leaseId=84543b68-5d51-4e11-8d84-f52f90520626 transactionalId=test-svc-inst-0-0 attempt=0
+04:17:31.377 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:31.378 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:31.379 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.379 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.380 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.380 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="shutdownClosesAllProducers" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.011">
+    <system-out><![CDATA[04:17:31.384 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.384 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.385 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.387 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.387 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.387 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.387 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.387 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.388 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.388 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+04:17:31.391 [main] WARN com.kafka.producer.pool.TransactionalProducerPool -- shutdown() called in unexpected pool state STOPPED
+04:17:31.391 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.391 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.391 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.392 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="fatalFencingEvictsProducerAndTriggersRecovery" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.214">
+    <system-out><![CDATA[04:17:31.398 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.398 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.398 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.398 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.399 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.399 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.400 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:31.401 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=eab80e7d-61be-44da-a234-b6c47273d2c9 transactionalId=test-svc-inst-0-0 waited=0ms
+04:17:31.401 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- executeInTransaction leaseId=eab80e7d-61be-44da-a234-b6c47273d2c9 transactionalId=test-svc-inst-0-0 correlationId=null
+04:17:31.401 [main] DEBUG com.kafka.producer.pool.PooledProducer -- beginTransaction transactionalId=test-svc-inst-0-0
+04:17:31.401 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction begun leaseId=eab80e7d-61be-44da-a234-b6c47273d2c9 transactionalId=test-svc-inst-0-0
+04:17:31.402 [main] DEBUG com.kafka.producer.pool.PooledProducer -- flush transactionalId=test-svc-inst-0-0
+04:17:31.402 [main] WARN com.kafka.producer.pool.TransactionalProducerPool -- Transaction error attempt=1/3 leaseId=eab80e7d-61be-44da-a234-b6c47273d2c9 transactionalId=test-svc-inst-0-0 errorClass=FATAL error=fenced
+04:17:31.402 [main] DEBUG com.kafka.producer.pool.PooledProducer -- abortTransaction transactionalId=test-svc-inst-0-0
+04:17:31.402 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction aborted leaseId=eab80e7d-61be-44da-a234-b6c47273d2c9
+04:17:31.402 [main] ERROR com.kafka.producer.pool.TransactionalProducerPool -- Evicting producer transactionalId=test-svc-inst-0-0 leaseId=eab80e7d-61be-44da-a234-b6c47273d2c9
+04:17:31.402 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → RECOVERING
+04:17:31.402 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.403 [main] INFO com.kafka.producer.pool.RecoverySupervisor -- Scheduling recovery for transactionalId=test-svc-inst-0-0 slot=0
+04:17:31.404 [kafka-pool-recovery] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.405 [kafka-pool-recovery] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.405 [kafka-pool-recovery] INFO com.kafka.producer.pool.RecoverySupervisor -- Recovery succeeded transactionalId=test-svc-inst-0-0
+04:17:31.405 [kafka-pool-recovery] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:31.606 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.607 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.607 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.608 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="poolFailsFastWhenInitTransactionsAlwaysFails" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.013">
+    <system-out><![CDATA[04:17:31.612 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.612 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.612 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.612 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.613 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.613 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.614 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=1 minHealthy=1
+04:17:31.614 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=fail-svc-inst-0-0
+04:17:31.615 [main] ERROR com.kafka.producer.pool.TransactionalProducerPool -- Failed to initialise producer slot=0
+java.lang.RuntimeException: broker unavailable
+	at org.apache.kafka.clients.producer.KafkaProducer.initTransactions(KafkaProducer.java:615)
+	at com.kafka.producer.pool.PooledProducer.initTransactions(PooledProducer.java:46)
+	at com.kafka.producer.pool.TransactionalProducerPool.createProducer(TransactionalProducerPool.java:489)
+	at com.kafka.producer.pool.TransactionalProducerPool.initialize(TransactionalProducerPool.java:126)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:53)
+	at org.junit.jupiter.api.AssertThrows.assertThrows(AssertThrows.java:35)
+	at org.junit.jupiter.api.Assertions.assertThrows(Assertions.java:3115)
+	at com.kafka.producer.pool.TransactionalProducerPoolTest.poolFailsFastWhenInitTransactionsAlwaysFails(TransactionalProducerPoolTest.java:106)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:728)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestableMethod(TimeoutExtension.java:147)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptTestMethod(TimeoutExtension.java:86)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeTestMethod$7(TestMethodTestDescriptor.java:218)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeTestMethod(TestMethodTestDescriptor.java:214)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:139)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:69)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1511)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:198)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:169)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:93)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:58)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:141)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:57)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:103)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:85)
+	at org.junit.platform.launcher.core.DelegatingLauncher.execute(DelegatingLauncher.java:47)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+04:17:31.621 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:31.621 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:31.622 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:31.622 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="acquireAllLeasesExhaustsPool" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.508">
+    <system-out><![CDATA[04:17:31.629 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:31.629 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:31.629 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:31.629 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:31.630 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:31.630 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:31.630 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:31.630 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=13110e35-7069-4a40-99f3-6869fd137d1b transactionalId=test-svc-inst-0-0 waited=0ms
+04:17:31.630 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 READY → LEASED
+04:17:31.630 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=3f3e23ad-9fe7-4c13-99ee-7d29c2945efd transactionalId=test-svc-inst-0-1 waited=0ms
+04:17:32.133 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:32.133 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:32.133 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 LEASED → READY
+04:17:32.133 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-1
+04:17:32.133 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:32.133 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:32.134 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:32.134 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="exceptionInCallbackAbortsTransaction" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.007">
+    <system-out><![CDATA[04:17:32.138 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:32.138 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:32.138 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:32.138 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:32.139 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:32.139 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:32.140 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:32.140 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=98748224-db83-4b29-a08c-c54c79d83027 transactionalId=test-svc-inst-0-0 waited=0ms
+04:17:32.140 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- executeInTransaction leaseId=98748224-db83-4b29-a08c-c54c79d83027 transactionalId=test-svc-inst-0-0 correlationId=null
+04:17:32.140 [main] DEBUG com.kafka.producer.pool.PooledProducer -- beginTransaction transactionalId=test-svc-inst-0-0
+04:17:32.140 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction begun leaseId=98748224-db83-4b29-a08c-c54c79d83027 transactionalId=test-svc-inst-0-0
+04:17:32.140 [main] WARN com.kafka.producer.pool.TransactionalProducerPool -- Transaction error attempt=1/3 leaseId=98748224-db83-4b29-a08c-c54c79d83027 transactionalId=test-svc-inst-0-0 errorClass=ABORT_REQUIRED error=callback failed
+04:17:32.141 [main] DEBUG com.kafka.producer.pool.PooledProducer -- abortTransaction transactionalId=test-svc-inst-0-0
+04:17:32.141 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Transaction aborted leaseId=98748224-db83-4b29-a08c-c54c79d83027
+04:17:32.141 [main] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:32.141 [main] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:32.142 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:32.142 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:32.142 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:32.142 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+  <testcase name="concurrentLeasesAreExclusive" classname="com.kafka.producer.pool.TransactionalProducerPoolTest" time="0.059">
+    <system-out><![CDATA[04:17:32.145 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Initialising TransactionalProducerPool size=2 minHealthy=1
+04:17:32.145 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-0
+04:17:32.146 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-0
+04:17:32.146 [main] INFO com.kafka.producer.pool.PooledProducer -- Initialising transactions for producer transactionalId=test-svc-inst-0-1
+04:17:32.146 [main] INFO com.kafka.producer.pool.PooledProducer -- Producer ready transactionalId=test-svc-inst-0-1
+04:17:32.146 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool initialised healthy=2 total=2 state=HEALTHY
+04:17:32.147 [pool-2-thread-1] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:32.147 [pool-2-thread-1] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=89293561-bc2f-4e20-acd8-e69add03a14c transactionalId=test-svc-inst-0-0 waited=0ms
+04:17:32.147 [pool-2-thread-2] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 READY → LEASED
+04:17:32.148 [pool-2-thread-2] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=288b4aed-06d6-4030-ae64-df9f272942d2 transactionalId=test-svc-inst-0-1 waited=0ms
+04:17:32.158 [pool-2-thread-1] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:32.158 [pool-2-thread-1] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:32.158 [pool-2-thread-2] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 LEASED → READY
+04:17:32.158 [pool-2-thread-2] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-1
+04:17:32.158 [pool-2-thread-3] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:32.158 [pool-2-thread-3] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=7ff49590-ca8c-4533-bb49-673b35b1ff8a transactionalId=test-svc-inst-0-0 waited=10ms
+04:17:32.158 [pool-2-thread-4] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 READY → LEASED
+04:17:32.158 [pool-2-thread-4] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=bd91c9ac-8e7c-4e76-b153-af8666c526f2 transactionalId=test-svc-inst-0-1 waited=10ms
+04:17:32.168 [pool-2-thread-3] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:32.169 [pool-2-thread-3] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:32.169 [pool-2-thread-5] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:32.169 [pool-2-thread-4] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 LEASED → READY
+04:17:32.169 [pool-2-thread-4] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-1
+04:17:32.169 [pool-2-thread-5] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=54fc2170-5196-4b9c-815d-f3f8f7c48eea transactionalId=test-svc-inst-0-0 waited=20ms
+04:17:32.170 [pool-2-thread-6] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 READY → LEASED
+04:17:32.170 [pool-2-thread-6] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=0a6c150a-8e09-42c1-bab6-108449b4b30d transactionalId=test-svc-inst-0-1 waited=21ms
+04:17:32.179 [pool-2-thread-5] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:32.179 [pool-2-thread-5] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:32.179 [pool-2-thread-7] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:32.179 [pool-2-thread-7] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=23587011-8fc1-4a89-a20a-6029ff60269f transactionalId=test-svc-inst-0-0 waited=30ms
+04:17:32.180 [pool-2-thread-6] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 LEASED → READY
+04:17:32.180 [pool-2-thread-6] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-1
+04:17:32.180 [pool-2-thread-8] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 READY → LEASED
+04:17:32.180 [pool-2-thread-8] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=4b5653e0-bda0-4cf5-aee0-b59275895590 transactionalId=test-svc-inst-0-1 waited=31ms
+04:17:32.190 [pool-2-thread-7] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:32.190 [pool-2-thread-7] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:32.190 [pool-2-thread-9] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 READY → LEASED
+04:17:32.190 [pool-2-thread-9] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=0c50621c-5f83-482b-855e-1b9eaa294230 transactionalId=test-svc-inst-0-0 waited=40ms
+04:17:32.191 [pool-2-thread-8] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 LEASED → READY
+04:17:32.191 [pool-2-thread-8] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-1
+04:17:32.191 [pool-2-thread-10] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 READY → LEASED
+04:17:32.191 [pool-2-thread-10] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Lease acquired leaseId=bc13c355-c13b-4aef-90fc-a8742ebed0be transactionalId=test-svc-inst-0-1 waited=41ms
+04:17:32.200 [pool-2-thread-9] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-0 LEASED → READY
+04:17:32.200 [pool-2-thread-9] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-0
+04:17:32.201 [pool-2-thread-10] DEBUG com.kafka.producer.pool.PooledProducer -- Producer state forced transactionalId=test-svc-inst-0-1 LEASED → READY
+04:17:32.201 [pool-2-thread-10] DEBUG com.kafka.producer.pool.TransactionalProducerPool -- Producer returned to pool transactionalId=test-svc-inst-0-1
+04:17:32.202 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool draining — waiting up to 1000ms for in-flight leases
+04:17:32.202 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-0
+04:17:32.202 [main] INFO com.kafka.producer.pool.PooledProducer -- Closing producer transactionalId=test-svc-inst-0-1
+04:17:32.203 [main] INFO com.kafka.producer.pool.TransactionalProducerPool -- Pool stopped
+]]></system-out>
+  </testcase>
+</testsuite>
