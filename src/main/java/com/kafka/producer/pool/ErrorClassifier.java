@@ -19,7 +19,7 @@ import org.apache.kafka.common.errors.UnsupportedVersionException;
  *       the producer instance is permanently broken and must be evicted.</li>
  *   <li>ABORT_REQUIRED: CommitFailedException — the transaction cannot commit;
  *       abort and return the producer to the pool.</li>
- *   <li>RETRIABLE: any Kafka RetriableException or TimeoutException on commit —
+ *   <li>RETRIABLE: any Kafka RetriableException —
  *       the operation may succeed on retry after aborting the current transaction.</li>
  *   <li>ABORT_REQUIRED (default): any other exception — abort the transaction but
  *       do not evict the producer.</li>
