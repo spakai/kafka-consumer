@@ -68,10 +68,28 @@ public final class RecoverySupervisor {
                 faulted.getTransactionalId(), faulted.getSlotIndex());
 
         executor.submit(() -> {
-            if (!concurrencyGuard.tryAcquire()) {
-                log.warn("Recovery concurrency limit reached; deferring recovery for " +
-                        "transactionalId={}", faulted.getTransactionalId());
-                // Re-submit after a brief pause to give other recoveries time to finish
+            boolean acquired = false;
+            try {
+                while (!shutdown && !(acquired = concurrencyGuard.tryAcquire(1, TimeUnit.SECONDS))) {
+                    log.warn("Recovery concurrency limit reached; deferring recovery for transactionalId={}", faulted.getTransactionalId());
+                }
+                if (shutdown) return;
+
+                PooledProducer replacement = buildReplacement(faulted.getSlotIndex());
+                log.info("Recovery succeeded transactionalId={}", replacement.getTransactionalId());
+                onRecovered.accept(replacement);
+            } catch (Exception e) {
+                if (e instanceof InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    onFailed.accept(ie);
+                } else {
+                    log.error("Recovery failed for slot={} transactionalId={}", faulted.getSlotIndex(), faulted.getTransactionalId(), e);
+                    onFailed.accept(e);
+                }
+            } finally {
+                if (acquired) concurrencyGuard.release();
+            }
+        });
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException ie) {
