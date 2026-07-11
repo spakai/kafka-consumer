@@ -77,7 +77,7 @@ public final class ExecutionOptions {
         }
 
         public Builder correlationId(String correlationId) {
-            this.correlationId = Objects.requireNonNull(correlationId);
+            this.correlationId = correlationId;
             return this;
         }
 
