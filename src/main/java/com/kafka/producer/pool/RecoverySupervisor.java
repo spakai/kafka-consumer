@@ -90,27 +90,6 @@ public final class RecoverySupervisor {
                 if (acquired) concurrencyGuard.release();
             }
         });
-                try {
-                    TimeUnit.SECONDS.sleep(1);
-                } catch (InterruptedException ie) {
-                    Thread.currentThread().interrupt();
-                }
-                scheduleRecovery(faulted, onRecovered, onFailed);
-                return;
-            }
-            try {
-                PooledProducer replacement = buildReplacement(faulted.getSlotIndex());
-                log.info("Recovery succeeded transactionalId={}",
-                        replacement.getTransactionalId());
-                onRecovered.accept(replacement);
-            } catch (Exception e) {
-                log.error("Recovery failed for slot={} transactionalId={}",
-                        faulted.getSlotIndex(), faulted.getTransactionalId(), e);
-                onFailed.accept(e);
-            } finally {
-                concurrencyGuard.release();
-            }
-        });
     }
 
     /**
