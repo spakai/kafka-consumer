@@ -1,0 +1,2 @@
+scenario,recovery_latency_ms,pool_state,tx_failures,p95_tx_ms
+S-07,328,HEALTHY,66,177.603

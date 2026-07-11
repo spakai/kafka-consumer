@@ -1,6 +1,20 @@
 # kafka-consumer
 Decouple Consumption and Processing model Kafka consumer
 
+# Performance harness
+
+Performance scenarios for the pooled transactional producer are under:
+
+- `src/perf/java/com/kafka/producer/perf`
+
+Run a scenario with:
+
+```bash
+mvn test -Pperf -Dscenario=S-04
+```
+
+Raw CSV and summary output are written to `perf-results/`.
+
 # Setup 
 docker run -d --name zookeeper --network kafka-net zookeeper:latest
 
