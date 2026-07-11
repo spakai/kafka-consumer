@@ -569,6 +569,9 @@ public final class TransactionalProducerPool {
     private void returnToPool(PooledProducer producer, boolean isRecovered) {
         PoolState ps = poolState.get();
         if (ps == PoolState.DRAINING || ps == PoolState.STOPPED) {
+            if (!isRecovered) {
+                leasedCount.decrementAndGet();
+            }
             producer.close();
             return;
         }
