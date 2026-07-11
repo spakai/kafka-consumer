@@ -125,10 +125,6 @@ public final class PoolMetrics {
     }
 
     public void recordPublishRetry(ErrorClass errorClass) {
-        Counter.builder("publish_retry_total")
-                .tag("error_class", errorClass.name())
-                .description("Number of publish retries by error class")
-                .register(registry)
-                .increment();
+        registry.counter("publish_retry_total", "error_class", errorClass.name()).increment();
     }
 }
