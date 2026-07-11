@@ -133,7 +133,8 @@ public final class TransactionalProducerPool {
             }
         }
         if (healthy < config.getMinHealthyProducers()) {
-            poolState.set(PoolState.STOPPED);
+            // Best-effort cleanup of any producers that were successfully created.
+            shutdown();
             throw new ProducerInitializationException(
                     "Pool startup failed: only " + healthy + " of " +
                     config.getPoolSize() + " producers initialised " +
