@@ -1,0 +1,2 @@
+scenario,mode,record_size_bytes,msg_per_sec,mb_per_sec,p50_ms,p95_ms,p99_ms,lease_p95_ms
+S-02,transactional,10240,72.97,0.71,2.451,119.669,176.161,0.108

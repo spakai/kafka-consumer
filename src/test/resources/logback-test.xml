@@ -1,0 +1,4 @@
+<configuration>
+  <!-- suppress all pool/kafka DEBUG noise; keep ERROR visible -->
+  <root level="ERROR"/>
+</configuration>

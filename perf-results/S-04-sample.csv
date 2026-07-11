@@ -1,2 +1,0 @@
-scenario,pool_size,threads,msg_per_sec,scaling_efficiency,p95_lease_ms
-S-04,1,1,0.00,0.000,0.000

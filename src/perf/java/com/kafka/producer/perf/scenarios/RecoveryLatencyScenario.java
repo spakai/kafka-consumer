@@ -57,16 +57,17 @@ public final class RecoveryLatencyScenario {
             failures += future.get().failures;
         }
 
+        PoolState finalState = pool.getPoolState();
         pool.shutdown();
 
         List<String> csv = List.of(
                 "scenario,recovery_latency_ms,pool_state,tx_failures,p95_tx_ms",
-                String.format("S-07,%d,%s,%d,%.3f", recoveryMs, pool.getPoolState(), failures, txLatency.p95Millis())
+                String.format("S-07,%d,%s,%d,%.3f", recoveryMs, finalState, failures, txLatency.p95Millis())
         );
         Path csvFile = ResultWriter.writeCsv(config.resultsDir(), "S-07", csv);
         ResultWriter.appendSummary(config.resultsDir(), "S-07", List.of(
                 "- recovery latency (ms): " + recoveryMs,
-                "- final pool state: " + pool.getPoolState(),
+                "- final pool state: " + finalState,
                 "- transactions lost (failures): " + failures,
                 "- CSV: `" + csvFile.getFileName() + "`"));
     }
