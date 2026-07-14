@@ -6,6 +6,7 @@ import org.apache.kafka.clients.producer.RecordMetadata;
 import java.time.Instant;
 import java.util.UUID;
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Represents a temporary, exclusive right to use a single {@link PooledProducer}.
@@ -24,6 +25,7 @@ public final class ProducerLease {
     private final Instant acquiredAt;
     private final Instant hardDeadline;
     private final String correlationId;
+    private final AtomicBoolean released;
 
     /**
      * Create a new lease.
@@ -38,6 +40,7 @@ public final class ProducerLease {
         this.acquiredAt = Instant.now();
         this.hardDeadline = acquiredAt.plusMillis(hardTimeoutMs);
         this.correlationId = correlationId;
+        this.released = new AtomicBoolean(false);
     }
 
     /**
@@ -48,6 +51,7 @@ public final class ProducerLease {
      * @throws LeaseExpiredException if the hard deadline has been exceeded
      */
     public Future<RecordMetadata> send(ProducerRecord<byte[], byte[]> record) {
+        ensureActive();
         if (isExpired()) {
             throw new LeaseExpiredException(
                     "Lease " + leaseId + " has expired (transactionalId=" +
@@ -63,6 +67,16 @@ public final class ProducerLease {
      */
     public boolean isExpired() {
         return Instant.now().isAfter(hardDeadline);
+    }
+
+    void ensureActive() {
+        if (released.get()) {
+            throw new IllegalStateException("Lease " + leaseId + " has already been released");
+        }
+    }
+
+    boolean markReleased() {
+        return released.compareAndSet(false, true);
     }
 
     // --- Accessors (package-private for pool internals) ---

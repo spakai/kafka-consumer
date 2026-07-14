@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: com.kafka.producer.pool.TransactionalProducerPoolTest
 -------------------------------------------------------------------------------
-Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.288 s -- in com.kafka.producer.pool.TransactionalProducerPoolTest
+Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.741 s -- in com.kafka.producer.pool.TransactionalProducerPoolTest

@@ -5,6 +5,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.errors.NetworkException;
 import org.apache.kafka.common.errors.ProducerFencedException;
+import org.apache.kafka.common.errors.TimeoutException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -123,6 +124,18 @@ class TransactionalProducerPoolTest {
     }
 
     @Test
+    void releasingSameLeaseTwiceIsRejectedWithoutCorruptingPoolCounts() {
+        ProducerLease lease = pool.acquireLease();
+
+        pool.release(lease);
+
+        assertThrows(IllegalStateException.class, () -> pool.release(lease));
+        assertEquals(0, pool.getLeasedCount());
+        assertEquals(2, pool.getReadyCount());
+        assertEquals(2, pool.getTotalCount());
+    }
+
+    @Test
     void acquireAllLeasesExhaustsPool() {
         ProducerLease lease1 = pool.acquireLease();
         ProducerLease lease2 = pool.acquireLease();
@@ -236,6 +249,20 @@ class TransactionalProducerPoolTest {
         // Aborted for each failed attempt (retryMaxAttempts=2, so 3 total attempts)
         verify(mockProducer, times(3)).abortTransaction();
         verify(mockProducer, never()).commitTransaction();
+    }
+
+    @Test
+    void timeoutDuringCommitEvictsProducerWithoutRetryingAmbiguousTransaction() {
+        doThrow(new TimeoutException("commit outcome unknown"))
+                .when(mockProducer).commitTransaction();
+
+        assertThrows(TimeoutException.class,
+                () -> pool.executeInTransaction(lease -> "result"));
+
+        // Retrying after an ambiguous commit could publish the transaction twice.
+        verify(mockProducer, times(1)).beginTransaction();
+        verify(mockProducer, times(1)).commitTransaction();
+        verify(mockProducer, atLeastOnce()).close(any());
     }
 
     // -----------------------------------------------------------------------

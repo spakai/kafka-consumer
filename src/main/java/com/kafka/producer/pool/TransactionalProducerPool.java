@@ -276,6 +276,10 @@ public final class TransactionalProducerPool {
      * @param lease active lease
      */
     public void release(ProducerLease lease) {
+        if (!lease.markReleased()) {
+            throw new IllegalStateException(
+                    "Lease " + lease.getLeaseId() + " has already been released");
+        }
         returnToPool(lease.getProducer(), false);
     }
 
@@ -324,6 +328,7 @@ public final class TransactionalProducerPool {
                     applyBackoff(attempt, options);
                 }
                 boolean transactionStarted = false;
+                boolean commitStarted = false;
                 try {
                     // Check hard deadline before each attempt
                     if (lease.isExpired()) {
@@ -338,6 +343,7 @@ public final class TransactionalProducerPool {
                     T result = callback.execute(lease);
 
                     // Flush then commit
+                    commitStarted = true;
                     lease.getProducer().flush();
                     lease.getProducer().commitTransaction();
                     metrics.recordTransactionCommit();
@@ -349,8 +355,7 @@ public final class TransactionalProducerPool {
 
                 } catch (Exception e) {
                     lastException = e;
-                    boolean duringCommit = false; // commit is called above, not here
-                    ErrorClass ec = ErrorClassifier.classify(e, duringCommit);
+                    ErrorClass ec = ErrorClassifier.classify(e, commitStarted);
 
                     log.warn("Transaction error attempt={}/{} leaseId={} transactionalId={} " +
                             "errorClass={} error={}",
@@ -358,7 +363,7 @@ public final class TransactionalProducerPool {
                             lease.getLeaseId(), lease.getTransactionalId(),
                             ec, e.getMessage());
 
-                    if (transactionStarted) {
+                    if (transactionStarted && ec != ErrorClass.FATAL) {
                         safeAbort(lease);
                     }
 
@@ -387,6 +392,7 @@ public final class TransactionalProducerPool {
         } finally {
             metrics.recordTransactionDuration(System.nanoTime() - txStart);
             if (!producerEvicted) {
+                lease.markReleased();
                 returnToPool(lease.getProducer(), false);
             }
         }
@@ -508,6 +514,7 @@ public final class TransactionalProducerPool {
     }
 
     private void checkLeaseExpiry(ProducerLease lease) {
+        lease.ensureActive();
         if (lease.isExpired()) {
             throw new LeaseExpiredException("Lease " + lease.getLeaseId() + " has expired");
         }
@@ -530,6 +537,7 @@ public final class TransactionalProducerPool {
      * Evict a producer: close it, trigger async recovery, and update pool state.
      */
     private void evictProducer(ProducerLease lease) {
+        lease.markReleased();
         PooledProducer faulted = lease.getProducer();
         log.error("Evicting producer transactionalId={} leaseId={}",
                 faulted.getTransactionalId(), lease.getLeaseId());
