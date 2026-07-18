@@ -1,0 +1,7 @@
+timestamp,scenario,run,implementation,topology,producer_count,threads,records_per_transaction,record_size,records_per_second,transactions_per_second,bytes_per_second,p50_ms,p95_ms,p99_ms,timeouts,failures,ambiguous,heap_used_bytes,live_threads,correctness_passed,framework_version,kafka_client_version
+2026-07-18T03:31:15.670999214Z,B-02,1,pool,single-broker,4,4,50,1024,9556.311,191.126,9785662.973,18.457,39.777,48.274,0,0,0,66958200,11,true,core,unknown
+2026-07-18T03:34:11.184849074Z,B-02,1,spring-kafka,single-broker,4,4,50,1024,7559.984,151.200,7741423.717,21.804,50.807,71.986,0,0,0,61922648,11,true,3.1.1,unknown
+2026-07-18T03:37:09.714702580Z,B-02,2,spring-kafka,single-broker,4,4,50,1024,8114.348,162.287,8309092.619,20.656,45.954,69.274,0,0,0,99878456,11,true,3.1.1,unknown
+2026-07-18T03:40:01.240193593Z,B-02,2,pool,single-broker,4,4,50,1024,8827.967,176.559,9039838.636,19.511,43.442,53.346,0,0,0,153970640,11,true,core,unknown
+2026-07-18T03:43:13.328610746Z,B-02,3,pool,single-broker,4,4,50,1024,9272.507,185.450,9495046.744,18.537,41.533,51.237,0,0,0,74502272,11,true,core,unknown
+2026-07-18T03:46:31.968197294Z,B-02,3,spring-kafka,single-broker,4,4,50,1024,9679.190,193.584,9911490.787,18.059,39.534,46.390,0,0,0,101129888,11,true,3.1.1,unknown
