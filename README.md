@@ -197,12 +197,77 @@ CSV output is written to `perf-results/`. See [`perf-results/summary.md`](perf-r
 - Runtime configuration reload and consumer offset transaction APIs are not currently provided.
 - Unit tests use mocked producers. Run the performance harness against Kafka for broker-level validation.
 
+## Multi-broker chaos harness
+
+Spec 004 is implemented as an opt-in Maven profile and a disposable three-broker
+Kafka environment. Start the cluster and create the replicated test topic:
+
+```bash
+./scripts/chaos-cluster.sh up
+./scripts/chaos-cluster.sh cluster-id
+```
+
+Compile and run the non-destructive three-broker baseline:
+
+```bash
+mvn test -Pchaos
+mvn -Pchaos exec:java \
+  -Dexec.mainClass=com.kafka.producer.chaos.ChaosRunner \
+  -Dexec.args="--scenario MB-01 --duration-sec 60"
+```
+
+Fault scenarios require both an explicit opt-in and the exact cluster ID:
+
+```bash
+mvn -Pchaos exec:java \
+  -Dexec.mainClass=com.kafka.producer.chaos.ChaosRunner \
+  -Dexec.args="--scenario CH-01 --duration-sec 180 --fault-at-sec 60 \
+  --fault-duration-sec 30 --chaos-enabled true --cluster-allowlist <cluster-id>"
+```
+
+Broker stop/start faults are performed through Docker. Network scenarios require
+explicit injection and cleanup commands so the same harness can use a proxy,
+`iptables`, or `tc` without embedding environment-specific privileged commands:
+
+```text
+--partition-broker-command "<inject command; {brokerId} and {container} are substituted>"
+--partition-cluster-command "<inject command>"
+--commit-response-command "<proxy command that drops commit responses>"
+--heal-network-command "<cleanup command>"
+```
+
+Only run chaos scenarios against disposable infrastructure. Per-second samples,
+fault events, and publish-ID correctness results are written to `chaos-results/`.
+Stop and remove the local cluster with `./scripts/chaos-cluster.sh down`.
+
+### What the chaos tests prove
+
+The validated broker-restart run demonstrated that the producer pool can survive
+loss of a Kafka leader broker without an application restart or transactional
+data corruption. Kafka elected replacement leaders while the pool handled
+transient failures using its existing retry and error-classification policy.
+Safe retriable operations were retried, while unsafe producers were evicted and
+rebuilt asynchronously.
+
+The `read_committed` verifier confirmed that:
+
+- committed transactions were complete;
+- aborted transactions were not visible;
+- no partial transactions or duplicate publish IDs were observed; and
+- per-key ordering checks passed.
+
+These tests do not guarantee zero failed publish attempts during an outage,
+cross-cluster failover, production-scale capacity, or automatic resolution of
+ambiguous commits. Network-partition scenarios additionally require an
+environment-specific proxy or firewall fault command.
+
 ## Project layout
 
 ```text
 src/main/java/com/kafka/producer/pool/   Pool implementation and public API
 src/test/java/com/kafka/producer/pool/   Unit tests
 src/perf/java/com/kafka/producer/perf/   Load scenarios and JMH benchmark
+src/chaos/java/com/kafka/producer/chaos/ Multi-broker and chaos test harness
 specs/                                   Functional and performance specifications
 perf-results/                            Checked-in benchmark output
 ```
