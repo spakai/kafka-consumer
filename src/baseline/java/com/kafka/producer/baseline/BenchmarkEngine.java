@@ -18,6 +18,8 @@ public final class BenchmarkEngine {
         String runId = adapter.name() + "-" + config.scenario() + "-"
                 + config.runNumber() + "-" + System.currentTimeMillis();
         AtomicLong sequences = new AtomicLong();
+        CorrectnessVerifier verifier = new CorrectnessVerifier();
+        var verificationStartOffsets = verifier.captureEndOffsets(config);
         runPhase(config, runId, adapter, config.warmup(), sequences, new PublishLedger(), false);
 
         PublishLedger ledger = new PublishLedger();
@@ -25,6 +27,11 @@ public final class BenchmarkEngine {
         List<LoadWorker.Stats> workerStats =
                 runPhase(config, runId, adapter, config.duration(), sequences, ledger, true);
         long durationNanos = System.nanoTime() - start;
+
+        // Transaction markers and the read-committed last stable offset can lag
+        // a successful commit response briefly under sustained load. Allow that
+        // state to settle before taking the verifier's terminal offset snapshot.
+        Thread.sleep(2_000);
 
         long transactions = workerStats.stream().mapToLong(value -> value.transactions).sum();
         long records = workerStats.stream().mapToLong(value -> value.records).sum();
@@ -35,7 +42,7 @@ public final class BenchmarkEngine {
                 .flatMap(value -> value.latencies.stream()).sorted().toList();
         double seconds = durationNanos / 1_000_000_000.0;
         CorrectnessVerifier.Report correctness =
-                new CorrectnessVerifier().verify(config, runId, ledger);
+                verifier.verify(config, runId, ledger, verificationStartOffsets);
         Runtime runtime = Runtime.getRuntime();
         return new BenchmarkResult(
                 config.scenario(), adapter.name(), runId,

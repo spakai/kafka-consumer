@@ -275,12 +275,12 @@ their order and repeating each pair at least three times:
 ```bash
 mvn test -Pspring-baseline
 
-mvn -Pspring-baseline exec:java \
+mvn -Pspring-baseline compile exec:java \
   -Dexec.mainClass=com.kafka.producer.baseline.BaselineRunner \
   -Dscenario=B-02 -Dimplementation=pool -Dtopology=single-broker \
   -DproducerCount=4 -Dthreads=4 -DrecordsPerTransaction=50 -DrunNumber=1
 
-mvn -Pspring-baseline exec:java \
+mvn -Pspring-baseline compile exec:java \
   -Dexec.mainClass=com.kafka.producer.baseline.BaselineRunner \
   -Dscenario=B-02 -Dimplementation=spring-kafka -Dtopology=single-broker \
   -DproducerCount=4 -Dthreads=4 -DrecordsPerTransaction=50 -DrunNumber=1

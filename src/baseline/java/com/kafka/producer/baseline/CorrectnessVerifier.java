@@ -25,8 +25,9 @@ public final class CorrectnessVerifier {
         }
     }
 
-    public Report verify(BaselineConfig config, String runId, PublishLedger ledger) {
-        Map<String, Observed> observed = readCommitted(config, runId);
+    public Report verify(BaselineConfig config, String runId, PublishLedger ledger,
+                         Map<TopicPartition, Long> startOffsets) {
+        Map<String, Observed> observed = readCommitted(config, runId, startOffsets);
         List<String> issues = new ArrayList<>();
         int missing = 0;
         int visibleFailed = 0;
@@ -60,21 +61,22 @@ public final class CorrectnessVerifier {
                 missing, visibleFailed, duplicates, partial, ordering, List.copyOf(issues));
     }
 
-    private Map<String, Observed> readCommitted(BaselineConfig config, String runId) {
-        var properties = new java.util.Properties();
-        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.bootstrapServers());
-        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
-        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
-        properties.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
-        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "baseline-verifier-" + UUID.randomUUID());
-        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
-        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+    public Map<TopicPartition, Long> captureEndOffsets(BaselineConfig config) {
+        try (var consumer = consumer(config)) {
+            List<TopicPartition> partitions = partitions(consumer, config.topic());
+            return Map.copyOf(consumer.endOffsets(partitions));
+        }
+    }
+
+    private Map<String, Observed> readCommitted(
+            BaselineConfig config, String runId, Map<TopicPartition, Long> startOffsets) {
         Map<String, Observed> result = new HashMap<>();
-        try (var consumer = new KafkaConsumer<byte[], byte[]>(properties)) {
-            List<TopicPartition> partitions = consumer.partitionsFor(config.topic()).stream()
-                    .map(info -> new TopicPartition(info.topic(), info.partition())).toList();
+        try (var consumer = consumer(config)) {
+            List<TopicPartition> partitions = partitions(consumer, config.topic());
             consumer.assign(partitions);
-            consumer.seekToBeginning(partitions);
+            for (TopicPartition partition : partitions) {
+                consumer.seek(partition, startOffsets.getOrDefault(partition, 0L));
+            }
             Map<TopicPartition, Long> ends = consumer.endOffsets(partitions);
             while (!atEnd(consumer, ends)) {
                 for (var record : consumer.poll(Duration.ofMillis(500))) {
@@ -96,6 +98,24 @@ public final class CorrectnessVerifier {
             }
         }
         return result;
+    }
+
+    private KafkaConsumer<byte[], byte[]> consumer(BaselineConfig config) {
+        var properties = new java.util.Properties();
+        properties.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, config.bootstrapServers());
+        properties.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
+        properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, ByteArrayDeserializer.class);
+        properties.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_committed");
+        properties.put(ConsumerConfig.GROUP_ID_CONFIG, "baseline-verifier-" + UUID.randomUUID());
+        properties.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
+        properties.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, false);
+        return new KafkaConsumer<>(properties);
+    }
+
+    private static List<TopicPartition> partitions(
+            KafkaConsumer<byte[], byte[]> consumer, String topic) {
+        return consumer.partitionsFor(topic).stream()
+                .map(info -> new TopicPartition(info.topic(), info.partition())).toList();
     }
 
     private static boolean atEnd(KafkaConsumer<byte[], byte[]> consumer,
