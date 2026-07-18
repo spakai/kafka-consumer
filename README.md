@@ -240,6 +240,27 @@ Only run chaos scenarios against disposable infrastructure. Per-second samples,
 fault events, and publish-ID correctness results are written to `chaos-results/`.
 Stop and remove the local cluster with `./scripts/chaos-cluster.sh down`.
 
+### What the chaos tests prove
+
+The validated broker-restart run demonstrated that the producer pool can survive
+loss of a Kafka leader broker without an application restart or transactional
+data corruption. Kafka elected replacement leaders while the pool handled
+transient failures using its existing retry and error-classification policy.
+Safe retriable operations were retried, while unsafe producers were evicted and
+rebuilt asynchronously.
+
+The `read_committed` verifier confirmed that:
+
+- committed transactions were complete;
+- aborted transactions were not visible;
+- no partial transactions or duplicate publish IDs were observed; and
+- per-key ordering checks passed.
+
+These tests do not guarantee zero failed publish attempts during an outage,
+cross-cluster failover, production-scale capacity, or automatic resolution of
+ambiguous commits. Network-partition scenarios additionally require an
+environment-specific proxy or firewall fault command.
+
 ## Project layout
 
 ```text
