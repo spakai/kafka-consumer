@@ -261,6 +261,35 @@ cross-cluster failover, production-scale capacity, or automatic resolution of
 ambiguous commits. Network-partition scenarios additionally require an
 environment-specific proxy or firewall fault command.
 
+## Spring Kafka transactional baseline
+
+Spec 005 adds an opt-in `spring-baseline` profile; Spring Kafka is not a
+dependency of the default library artifact. The harness normalizes pool and
+Spring transaction workloads and writes raw latency samples plus comparison
+rows to `baseline-results/`. Each run is checked by a `read_committed` consumer,
+and a failed correctness run is rejected.
+
+Run each implementation in its own JVM with identical arguments, alternating
+their order and repeating each pair at least three times:
+
+```bash
+mvn test -Pspring-baseline
+
+mvn -Pspring-baseline exec:java \
+  -Dexec.mainClass=com.kafka.producer.baseline.BaselineRunner \
+  -Dscenario=B-02 -Dimplementation=pool -Dtopology=single-broker \
+  -DproducerCount=4 -Dthreads=4 -DrecordsPerTransaction=50 -DrunNumber=1
+
+mvn -Pspring-baseline exec:java \
+  -Dexec.mainClass=com.kafka.producer.baseline.BaselineRunner \
+  -Dscenario=B-02 -Dimplementation=spring-kafka -Dtopology=single-broker \
+  -DproducerCount=4 -Dthreads=4 -DrecordsPerTransaction=50 -DrunNumber=1
+```
+
+Scenarios B-01 through B-06 are available. B-06 requires the three-broker
+environment and an operator-controlled broker restart; the harness does not
+replay transactions whose commit outcome is ambiguous.
+
 ## Project layout
 
 ```text
@@ -268,6 +297,7 @@ src/main/java/com/kafka/producer/pool/   Pool implementation and public API
 src/test/java/com/kafka/producer/pool/   Unit tests
 src/perf/java/com/kafka/producer/perf/   Load scenarios and JMH benchmark
 src/chaos/java/com/kafka/producer/chaos/ Multi-broker and chaos test harness
+src/baseline/java/com/kafka/producer/baseline/ Spring comparison harness
 specs/                                   Functional and performance specifications
 perf-results/                            Checked-in benchmark output
 ```
