@@ -31,7 +31,8 @@ case "${1:-}" in
   cluster-id)
     docker compose -f "$compose_file" exec -T kafka-1 \
       /opt/kafka/bin/kafka-cluster.sh \
-      cluster-id --bootstrap-server localhost:9092
+      cluster-id --bootstrap-server localhost:9092 \
+      | sed -n 's/^Cluster ID: Some(\(.*\))/\1/p; s/^Cluster ID: \(.*\)$/\1/p'
     ;;
   *)
     echo "Usage: $0 {up|down|status|cluster-id}" >&2

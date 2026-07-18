@@ -33,7 +33,8 @@ public final class ClusterInspector implements AutoCloseable {
     public ClusterSnapshot inspect(String topic) throws Exception {
         long timeoutMs = timeout.toMillis();
         DescribeClusterResult cluster = admin.describeCluster();
-        String clusterId = cluster.clusterId().get(timeoutMs, TimeUnit.MILLISECONDS);
+        String clusterId = normalizeClusterId(
+                cluster.clusterId().get(timeoutMs, TimeUnit.MILLISECONDS));
         List<Integer> brokers = cluster.nodes().get(timeoutMs, TimeUnit.MILLISECONDS)
                 .stream().map(Node::id).sorted().toList();
         TopicDescription description = admin.describeTopics(List.of(topic))
@@ -129,7 +130,7 @@ public final class ClusterInspector implements AutoCloseable {
     }
 
     public void verifyAllowlisted(ClusterSnapshot snapshot, String allowedClusterId) {
-        if (!snapshot.clusterId().equals(allowedClusterId)) {
+        if (!snapshot.clusterId().equals(normalizeClusterId(allowedClusterId))) {
             throw new IllegalStateException(
                     "Refusing chaos against cluster " + snapshot.clusterId()
                             + "; expected allow-listed cluster " + allowedClusterId);
@@ -138,6 +139,18 @@ public final class ClusterInspector implements AutoCloseable {
             throw new IllegalStateException(
                     "Spec04 requires exactly three visible brokers; found " + snapshot.brokerIds());
         }
+    }
+
+    /** Kafka tooling and some client versions render the ID as {@code Some(id)}. */
+    static String normalizeClusterId(String clusterId) {
+        if (clusterId == null) {
+            return null;
+        }
+        String value = clusterId.trim();
+        if (value.startsWith("Some(") && value.endsWith(")")) {
+            return value.substring("Some(".length(), value.length() - 1);
+        }
+        return value;
     }
 
     @Override
