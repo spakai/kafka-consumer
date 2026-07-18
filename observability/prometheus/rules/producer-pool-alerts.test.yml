@@ -1,0 +1,46 @@
+rule_files:
+  - producer-pool-recording.yml
+  - producer-pool-alerts.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 1m
+    input_series:
+      - series: 'pool_size_total{job="producer-pool",environment="test",application="demo",cluster="local",pool="default"}'
+        values: '4x20'
+      - series: 'pool_size_leased{job="producer-pool",environment="test",application="demo",cluster="local",pool="default"}'
+        values: '4x20'
+      - series: 'pool_health{job="producer-pool",environment="test",application="demo",cluster="local",pool="default",state="DEGRADED"}'
+        values: '1x20'
+      - series: 'lease_timeout_total{job="producer-pool",environment="test",application="demo",cluster="local",pool="default"}'
+        values: '0+60x20'
+    alert_rule_test:
+      - eval_time: 6m
+        alertname: ProducerPoolDegraded
+        exp_alerts:
+          - exp_labels:
+              alertname: ProducerPoolDegraded
+              application: demo
+              cluster: local
+              environment: test
+              pool: default
+              severity: warning
+            exp_annotations:
+              summary: Producer pool is degraded
+              description: Pool default has remained below its healthy capacity threshold.
+              runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md
+      - eval_time: 16m
+        alertname: ProducerPoolSaturated
+        exp_alerts:
+          - exp_labels:
+              alertname: ProducerPoolSaturated
+              application: demo
+              cluster: local
+              environment: test
+              pool: default
+              severity: warning
+            exp_annotations:
+              summary: Producer pool is saturated
+              description: More than 90 percent of producer slots have been leased for 10 minutes.
+              runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md

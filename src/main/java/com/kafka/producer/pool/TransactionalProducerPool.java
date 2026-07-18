@@ -92,7 +92,8 @@ public final class TransactionalProducerPool {
                 meterRegistry,
                 () -> allProducers.size(),
                 readyCount::get,
-                leasedCount::get);
+                leasedCount::get,
+                poolState::get);
     }
 
     /**
@@ -250,6 +251,12 @@ public final class TransactionalProducerPool {
         } catch (Exception e) {
             ErrorClass ec = ErrorClassifier.classify(e, true);
             if (ec == ErrorClass.FATAL) {
+                if (e instanceof org.apache.kafka.common.errors.TimeoutException) {
+                    metrics.recordTransactionOutcome(TransactionOutcome.AMBIGUOUS);
+                }
+                if (isFencingFailure(e)) {
+                    metrics.recordProducerFenced();
+                }
                 log.error("Fatal error during commit — evicting producer leaseId={} " +
                         "transactionalId={}", lease.getLeaseId(),
                         lease.getTransactionalId(), e);
@@ -314,7 +321,13 @@ public final class TransactionalProducerPool {
                 ? config.getRetryMaxAttempts() + 1
                 : options.getMaxRetryAttempts() + 1;
 
-        ProducerLease lease = acquireLease(leaseTimeout);
+        ProducerLease lease;
+        try {
+            lease = acquireLease(leaseTimeout);
+        } catch (LeaseTimeoutException | PoolSaturationException | PoolShutdownException e) {
+            metrics.recordTransactionOutcome(TransactionOutcome.REJECTED);
+            throw e;
+        }
         log.debug("executeInTransaction leaseId={} transactionalId={} correlationId={}",
                 lease.getLeaseId(), lease.getTransactionalId(), options.getCorrelationId());
 
@@ -368,7 +381,12 @@ public final class TransactionalProducerPool {
                     }
 
                     if (ec == ErrorClass.FATAL) {
-                        metrics.recordProducerFenced();
+                        if (commitStarted && e instanceof org.apache.kafka.common.errors.TimeoutException) {
+                            metrics.recordTransactionOutcome(TransactionOutcome.AMBIGUOUS);
+                        }
+                        if (isFencingFailure(e)) {
+                            metrics.recordProducerFenced();
+                        }
                         evictProducer(lease);
                         producerEvicted = true;
                         throw toRuntimeException(e);
@@ -556,11 +574,12 @@ public final class TransactionalProducerPool {
         recoverySupervisor.scheduleRecovery(
                 faulted,
                 replacement -> {
-                    metrics.recordProducerRecovery();
+                    metrics.recordProducerRecovery("SUCCESS");
                     allProducers.add(replacement);
                     returnToPool(replacement, true);
                 },
                 ex -> {
+                    metrics.recordProducerRecovery("FAILED");
                     log.error("Producer recovery failed permanently for slot={}",
                             faulted.getSlotIndex(), ex);
                     updatePoolState();
@@ -630,5 +649,11 @@ public final class TransactionalProducerPool {
     private static RuntimeException toRuntimeException(Exception e) {
         if (e instanceof RuntimeException re) return re;
         return new RuntimeException(e);
+    }
+
+    private static boolean isFencingFailure(Exception e) {
+        return e instanceof org.apache.kafka.common.errors.ProducerFencedException
+                || e instanceof org.apache.kafka.common.errors.InvalidProducerEpochException
+                || e instanceof org.apache.kafka.common.errors.OutOfOrderSequenceException;
     }
 }

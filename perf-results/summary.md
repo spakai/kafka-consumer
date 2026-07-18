@@ -157,3 +157,9 @@ CSV: `S-07-2026-07-11T06-17-48.918328941Z.csv`
 ## S-08 — JMH Micro-Benchmark (executeInTransaction hot path)
 
 _Results pending — re-running with logging suppressed for accurate measurement._
+
+## S-05 (generated 2026-07-18T09:58:16.391809329Z)
+- pool size: 4
+- thread counts: 8, 16, 32
+- lease timeout configured: 5000ms
+- CSV: `S-05-2026-07-18T09-58-16.390752912Z.csv`
