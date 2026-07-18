@@ -1,0 +1,101 @@
+groups:
+  - name: producer-pool-alerts
+    rules:
+      - alert: ProducerPoolMetricsMissing
+        expr: up{job="producer-pool"} == 0 or absent(pool_size_total{job="producer-pool"})
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Producer pool metrics are missing
+          description: Prometheus cannot scrape the producer pool or its core capacity series is absent.
+          runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md
+
+      - alert: ProducerPoolUnavailable
+        expr: max by (environment, application, cluster, pool) (pool_health{state=~"STARTING|DRAINING|STOPPED"}) == 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Producer pool is unavailable
+          description: Pool {{ $labels.pool }} for {{ $labels.application }} is not accepting normal traffic.
+          runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md
+
+      - alert: ProducerPoolDegraded
+        expr: max by (environment, application, cluster, pool) (pool_health{state="DEGRADED"}) == 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Producer pool is degraded
+          description: Pool {{ $labels.pool }} has remained below its healthy capacity threshold.
+          runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md
+
+      - alert: ProducerPoolSaturated
+        expr: producer_pool:saturation:ratio > 0.90
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Producer pool is saturated
+          description: More than 90 percent of producer slots have been leased for 10 minutes.
+          runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md
+
+      - alert: ProducerPoolLeaseTimeouts
+        expr: producer_pool:lease_timeout:rate5m > 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Producer lease requests are timing out
+          description: Pool callers are failing to acquire producer leases.
+          runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md
+
+      - alert: ProducerPoolHighAbortRatio
+        expr: |
+          (
+            producer_pool:transactions:abort_rate5m
+            /
+            clamp_min(
+              producer_pool:transactions:commit_rate5m + producer_pool:transactions:abort_rate5m,
+              0.000001
+            )
+          ) > 0.05
+          and
+          (producer_pool:transactions:commit_rate5m + producer_pool:transactions:abort_rate5m) > 0.1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Producer transaction abort ratio is high
+          description: More than 5 percent of terminal transactions are aborting at meaningful traffic volume.
+          runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md
+
+      - alert: ProducerPoolFencingDetected
+        expr: increase(producer_fenced_total[5m]) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: Transactional producer fencing detected
+          description: A producer was fenced. Check transactional ID uniqueness and concurrent instances immediately.
+          runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md
+
+      - alert: ProducerPoolRecoveryStorm
+        expr: sum by (environment, application, cluster, pool) (rate(producer_recovery_total[5m])) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Producer recovery attempts are elevated
+          description: The producer pool is repeatedly rebuilding producer slots.
+          runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md
+
+      - alert: ProducerPoolHighTransactionLatency
+        expr: producer_pool:transaction_duration:p95 > 1
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Producer transaction latency is high
+          description: Transaction duration p95 has exceeded one second for 10 minutes.
+          runbook_url: https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md

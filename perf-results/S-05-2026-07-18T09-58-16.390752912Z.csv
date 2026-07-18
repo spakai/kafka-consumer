@@ -1,0 +1,4 @@
+scenario,pool_size,threads,tx_per_sec,lease_timeout_rate,saturation_rate,p95_lease_ms,p99_tx_ms
+S-05,4,8,153.60,0.0000,0.0000,85.393,860.881
+S-05,4,16,157.40,0.0000,0.0008,301.990,2168.455
+S-05,4,32,169.40,0.0000,0.0151,0.046,3349.152

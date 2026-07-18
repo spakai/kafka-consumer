@@ -1,0 +1,467 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Capacity, transaction health, latency and recovery for TransactionalProducerPool.",
+  "editable": false,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [
+    {
+      "icon": "external link",
+      "includeVars": true,
+      "keepTime": true,
+      "tags": [],
+      "targetBlank": true,
+      "title": "Alert runbook",
+      "type": "link",
+      "url": "https://github.com/spakai/kafka-transactional-producer-pool/blob/master/observability/runbooks/producer-pool-alerts.md"
+    }
+  ],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+      "id": 100,
+      "panels": [],
+      "title": "Pool overview",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Current one-hot lifecycle state. No data means telemetry is missing, not healthy.",
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{"color": "red", "value": null}, {"color": "green", "value": 1}]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 5, "w": 4, "x": 0, "y": 1},
+      "id": 1,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "name"
+      },
+      "targets": [
+        {
+          "expr": "max by (state) (pool_health{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"} == 1)",
+          "legendFormat": "{{state}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Pool health",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Leased slots divided by total slots.",
+      "fieldConfig": {
+        "defaults": {
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {"color": "green", "value": null},
+              {"color": "yellow", "value": 0.75},
+              {"color": "red", "value": 0.9}
+            ]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 5, "w": 4, "x": 4, "y": 1},
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(pool_size_leased{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}) / clamp_min(sum(pool_size_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}), 1)",
+          "refId": "A"
+        }
+      ],
+      "title": "Saturation",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Committed transactions per second over five minutes.",
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 5, "w": 4, "x": 8, "y": 1},
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(transaction_commit_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m]))",
+          "refId": "A"
+        }
+      ],
+      "title": "Commit rate",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Commits divided by commits plus aborts. No traffic is shown as no data.",
+      "fieldConfig": {
+        "defaults": {
+          "max": 1,
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{"color": "red", "value": null}, {"color": "yellow", "value": 0.95}, {"color": "green", "value": 0.99}]
+          },
+          "unit": "percentunit"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 5, "w": 4, "x": 12, "y": 1},
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(transaction_commit_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])) / (sum(rate(transaction_commit_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])) + sum(rate(transaction_abort_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])))",
+          "refId": "A"
+        }
+      ],
+      "title": "Success ratio",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "95th percentile end-to-end transaction duration from histogram buckets.",
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "gridPos": {"h": 5, "w": 4, "x": 16, "y": 1},
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(transaction_duration_ms_seconds_bucket{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])))",
+          "refId": "A"
+        }
+      ],
+      "title": "Transaction p95",
+      "type": "stat"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Lease acquisition timeouts per second.",
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 5, "w": 4, "x": 20, "y": 1},
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {"calcs": ["lastNotNull"], "fields": "", "values": false},
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(lease_timeout_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m]))",
+          "refId": "A"
+        }
+      ],
+      "title": "Lease timeouts",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 6},
+      "id": 101,
+      "panels": [],
+      "title": "Capacity and saturation",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Configured, ready and leased producer slots over time.",
+      "fieldConfig": {"defaults": {"unit": "short"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 7},
+      "id": 7,
+      "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "right"}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {"expr": "sum(pool_size_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"})", "legendFormat": "total", "refId": "A"},
+        {"expr": "sum(pool_size_ready{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"})", "legendFormat": "ready", "refId": "B"},
+        {"expr": "sum(pool_size_leased{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"})", "legendFormat": "leased", "refId": "C"}
+      ],
+      "title": "Pool slots",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Lease wait percentiles aggregated correctly across selected instances.",
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 7},
+      "id": 8,
+      "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "right"}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {"expr": "histogram_quantile(0.50, sum by (le) (rate(lease_wait_ms_seconds_bucket{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])))", "legendFormat": "p50", "refId": "A"},
+        {"expr": "histogram_quantile(0.95, sum by (le) (rate(lease_wait_ms_seconds_bucket{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])))", "legendFormat": "p95", "refId": "B"},
+        {"expr": "histogram_quantile(0.99, sum by (le) (rate(lease_wait_ms_seconds_bucket{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])))", "legendFormat": "p99", "refId": "C"}
+      ],
+      "title": "Lease wait latency",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 15},
+      "id": 102,
+      "panels": [],
+      "title": "Transactions",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Transaction lifecycle rates by outcome.",
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+      "id": 9,
+      "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "right"}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {"expr": "sum(rate(transaction_begin_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m]))", "legendFormat": "begun", "refId": "A"},
+        {"expr": "sum(rate(transaction_commit_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m]))", "legendFormat": "committed", "refId": "B"},
+        {"expr": "sum(rate(transaction_abort_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m]))", "legendFormat": "aborted", "refId": "C"}
+      ],
+      "title": "Transaction rates",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Transaction duration percentiles from merged histogram buckets.",
+      "fieldConfig": {"defaults": {"unit": "s"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+      "id": 10,
+      "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "right"}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {"expr": "histogram_quantile(0.50, sum by (le) (rate(transaction_duration_ms_seconds_bucket{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])))", "legendFormat": "p50", "refId": "A"},
+        {"expr": "histogram_quantile(0.95, sum by (le) (rate(transaction_duration_ms_seconds_bucket{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])))", "legendFormat": "p95", "refId": "B"},
+        {"expr": "histogram_quantile(0.99, sum by (le) (rate(transaction_duration_ms_seconds_bucket{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m])))", "legendFormat": "p99", "refId": "C"}
+      ],
+      "title": "Transaction duration",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 24},
+      "id": 103,
+      "panels": [],
+      "title": "Reliability and recovery",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Bounded retry classes, fencing events and recovery outcomes.",
+      "fieldConfig": {"defaults": {"unit": "ops"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 25},
+      "id": 11,
+      "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "right"}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {"expr": "sum by (error_class) (rate(publish_retry_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m]))", "legendFormat": "retry {{error_class}}", "refId": "A"},
+        {"expr": "sum(rate(producer_fenced_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m]))", "legendFormat": "fenced", "refId": "B"},
+        {"expr": "sum by (outcome) (rate(producer_recovery_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"}[5m]))", "legendFormat": "recovery {{outcome}}", "refId": "C"}
+      ],
+      "title": "Retries, fencing and recovery",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "One-hot pool lifecycle states over time.",
+      "fieldConfig": {"defaults": {"max": 1, "min": 0, "unit": "short"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 25},
+      "id": 12,
+      "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "right"}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {"expr": "max by (instance, state) (pool_health{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"})", "legendFormat": "{{instance}} {{state}}", "refId": "A"}
+      ],
+      "title": "Pool state",
+      "type": "state-timeline"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 33},
+      "id": 104,
+      "panels": [],
+      "title": "JVM runtime",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "JVM heap used and committed for the selected instances.",
+      "fieldConfig": {"defaults": {"unit": "bytes"}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 34},
+      "id": 13,
+      "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "right"}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {"expr": "sum(jvm_memory_used_bytes{area=\"heap\",environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"})", "legendFormat": "used", "refId": "A"},
+        {"expr": "sum(jvm_memory_committed_bytes{area=\"heap\",environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"})", "legendFormat": "committed", "refId": "B"}
+      ],
+      "title": "Heap",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "prometheus"},
+      "description": "Process CPU utilization and JVM live threads.",
+      "fieldConfig": {"defaults": {}, "overrides": []},
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 34},
+      "id": 14,
+      "options": {"legend": {"calcs": ["lastNotNull"], "displayMode": "table", "placement": "right"}, "tooltip": {"mode": "multi", "sort": "desc"}},
+      "targets": [
+        {"expr": "avg(process_cpu_usage{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"})", "legendFormat": "CPU ratio", "refId": "A"},
+        {"expr": "sum(jvm_threads_live_threads{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\",instance=~\"$instance\"})", "legendFormat": "live threads", "refId": "B"}
+      ],
+      "title": "CPU and threads",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "15s",
+  "schemaVersion": 39,
+  "tags": ["kafka", "transactions", "producer-pool"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {"type": "prometheus", "uid": "prometheus"},
+        "definition": "label_values(pool_size_total, environment)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Environment",
+        "multi": false,
+        "name": "environment",
+        "options": [],
+        "query": {"query": "label_values(pool_size_total, environment)", "refId": "PrometheusVariableQueryEditor-Environment"},
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {"type": "prometheus", "uid": "prometheus"},
+        "definition": "label_values(pool_size_total{environment=~\"$environment\"}, application)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Application",
+        "multi": false,
+        "name": "application",
+        "options": [],
+        "query": {"query": "label_values(pool_size_total{environment=~\"$environment\"}, application)", "refId": "PrometheusVariableQueryEditor-Application"},
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {"type": "prometheus", "uid": "prometheus"},
+        "definition": "label_values(pool_size_total{environment=~\"$environment\",application=~\"$application\"}, cluster)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Cluster",
+        "multi": false,
+        "name": "cluster",
+        "options": [],
+        "query": {"query": "label_values(pool_size_total{environment=~\"$environment\",application=~\"$application\"}, cluster)", "refId": "PrometheusVariableQueryEditor-Cluster"},
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {"type": "prometheus", "uid": "prometheus"},
+        "definition": "label_values(pool_size_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\"}, pool)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Pool",
+        "multi": false,
+        "name": "pool",
+        "options": [],
+        "query": {"query": "label_values(pool_size_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\"}, pool)", "refId": "PrometheusVariableQueryEditor-Pool"},
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "allValue": ".*",
+        "current": {},
+        "datasource": {"type": "prometheus", "uid": "prometheus"},
+        "definition": "label_values(pool_size_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\"}, instance)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Instance",
+        "multi": true,
+        "name": "instance",
+        "options": [],
+        "query": {"query": "label_values(pool_size_total{environment=~\"$environment\",application=~\"$application\",cluster=~\"$cluster\",pool=~\"$pool\"}, instance)", "refId": "PrometheusVariableQueryEditor-Instance"},
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {"from": "now-1h", "to": "now"},
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Transactional Producer Pool",
+  "uid": "producer-pool",
+  "version": 1,
+  "weekStart": ""
+}

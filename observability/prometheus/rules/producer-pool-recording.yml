@@ -1,0 +1,41 @@
+groups:
+  - name: producer-pool-recording
+    interval: 15s
+    rules:
+      - record: producer_pool:saturation:ratio
+        expr: |
+          sum by (environment, application, cluster, pool) (pool_size_leased)
+          /
+          clamp_min(sum by (environment, application, cluster, pool) (pool_size_total), 1)
+      - record: producer_pool:ready:ratio
+        expr: |
+          sum by (environment, application, cluster, pool) (pool_size_ready)
+          /
+          clamp_min(sum by (environment, application, cluster, pool) (pool_size_total), 1)
+      - record: producer_pool:transactions:commit_rate5m
+        expr: sum by (environment, application, cluster, pool) (rate(transaction_commit_total[5m]))
+      - record: producer_pool:transactions:abort_rate5m
+        expr: sum by (environment, application, cluster, pool) (rate(transaction_abort_total[5m]))
+      - record: producer_pool:transactions:success_ratio5m
+        expr: |
+          producer_pool:transactions:commit_rate5m
+          /
+          clamp_min(
+            producer_pool:transactions:commit_rate5m
+            + producer_pool:transactions:abort_rate5m,
+            0.000001
+          )
+      - record: producer_pool:lease_timeout:rate5m
+        expr: sum by (environment, application, cluster, pool) (rate(lease_timeout_total[5m]))
+      - record: producer_pool:lease_wait:p95
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le, environment, application, cluster, pool) (rate(lease_wait_ms_seconds_bucket[5m]))
+          )
+      - record: producer_pool:transaction_duration:p95
+        expr: |
+          histogram_quantile(
+            0.95,
+            sum by (le, environment, application, cluster, pool) (rate(transaction_duration_ms_seconds_bucket[5m]))
+          )

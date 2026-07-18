@@ -142,9 +142,48 @@ The supplied `MeterRegistry` receives:
 - `pool_size_total`, `pool_size_ready`, `pool_size_leased`
 - `lease_wait_ms`, `lease_timeout_total`
 - `transaction_begin_total`, `transaction_commit_total`, `transaction_abort_total`
+- `transaction_outcome_total` tagged by `outcome`
 - `transaction_duration_ms`
-- `producer_fenced_total`, `producer_recovery_total`
+- `pool_health` tagged by `state`
+- `producer_fenced_total`, `producer_recovery_total` tagged by `outcome`
 - `publish_retry_total` tagged by `error_class`
+
+## Prometheus and Grafana
+
+Spec 006 provides a local Prometheus and Grafana stack with a live Kafka workload:
+
+```bash
+docker compose -f observability/compose.yaml up --build
+```
+
+After the services become healthy:
+
+- Grafana dashboard: [http://localhost:3000/d/producer-pool](http://localhost:3000/d/producer-pool)
+- Prometheus targets: [http://localhost:9090/targets](http://localhost:9090/targets)
+- Raw demo metrics: [http://localhost:9404/metrics](http://localhost:9404/metrics)
+
+Grafana is provisioned automatically with anonymous viewer access for this disposable local environment. Do not copy that authentication setting to production.
+
+To run only the demo against an existing Kafka broker:
+
+```bash
+KAFKA_BOOTSTRAP_SERVERS=localhost:9092 \
+mvn -Pobservability compile exec:java
+```
+
+Stop the stack while retaining local dashboard data:
+
+```bash
+docker compose -f observability/compose.yaml down
+```
+
+Stop it and remove the disposable Prometheus and Grafana volumes:
+
+```bash
+docker compose -f observability/compose.yaml down --volumes
+```
+
+Alert investigation guidance is in [the producer-pool runbook](observability/runbooks/producer-pool-alerts.md). Production deployments must protect `/metrics`, configure real alert thresholds and Grafana authentication, and provide their own persistence and retention policy.
 
 ## Local Kafka broker
 
